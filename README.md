@@ -1,138 +1,121 @@
-Aqui está seu **README** reescrito e formatado para o GitHub — direto, limpo e com boa hierarquia visual:
+# 🧮 Point-to-Point Communication in MPI — Ping-Pong
+
+<p align="center">
+  <em>Didactic benchmark of inter-process communication with MPI, Python, and mpi4py.</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/MPI-Message%20Passing%20Interface-blue?style=flat" alt="MPI">
+  <img src="https://img.shields.io/badge/mpi4py-Python%20Interface-green?style=flat" alt="mpi4py">
+  <img src="https://img.shields.io/badge/status-completed-brightgreen?style=flat" alt="Status: completed">
+</p>
 
 ---
 
-# 🧮 Comunicação Ponto a Ponto em MPI — Ping-Pong
+This project simulates **Point-to-Point** communication using **MPI** (*Message Passing Interface*) through the **mpi4py** library. The program runs the classic **Ping-Pong** experiment: one process sends a message to another process, which sends it back to the sender.
 
-## 📘 Descrição
+The experiment measures the round-trip time for different message sizes and calculates the transfer rate in MB/s. The results are exported to CSV for further analysis.
 
-Este projeto implementa uma simulação de **comunicação ponto a ponto (Point-to-Point)** utilizando **MPI (Message Passing Interface)** por meio da biblioteca **mpi4py**.
+## 🎯 Objective
 
-O objetivo é medir o **tempo de transmissão e recepção** de mensagens entre dois processos — o clássico experimento **Ping-Pong** — e calcular a **taxa de transferência (MB/s)** para diferentes tamanhos de mensagens.
+Demonstrate, through a practical and didactic example, how parallel processes communicate with MPI and how to measure the performance of that communication in terms of latency and bandwidth.
 
-Os resultados são exportados em **CSV**, permitindo análise posterior em planilhas ou ferramentas de visualização.
+## ✨ Features
 
----
+- Point-to-point communication between two MPI processes.
+- Sending and receiving data with `Send()` and `Recv()`.
+- Time measurement with `MPI.Wtime()`.
+- Calculation of transferred volume and transfer rate.
+- Generation of floating-point number arrays with NumPy.
+- Export of results to a CSV file.
 
-## ⚙️ Tecnologias Utilizadas
+## 🛠 How to Use the Repository
 
-* 🐍 **Python 3.x**
-* 🔁 **mpi4py** — Interface Python para MPI
-* 💡 **NumPy** — Geração eficiente de arrays de doubles aleatórios
-* 📄 **CSV (módulo nativo)** — Exportação dos resultados
-
----
-
-## 📦 Instalação
-
-Antes de executar o programa, é necessário ter o **MPI** instalado no sistema (ex: *OpenMPI*) e a biblioteca **mpi4py** configurada no Python.
-
-### 🔧 Passos no macOS / Linux:
+📥 1. Clone the repository with Git:
 
 ```bash
-# Instale o OpenMPI
-brew install open-mpi           # macOS
-# ou
-sudo apt-get install openmpi-bin openmpi-common openmpi-doc libopenmpi-dev  # Linux (Ubuntu/Debian)
+git clone https://github.com/jimmykiedis/Point2PointMPI.git
+cd Projeto-MPI-PingPong
+```
 
-# Instale as dependências Python
+You can also download the project as a ZIP file from the repository page and extract it into a local folder.
+
+📋 2. Prerequisites
+
+- Python 3.x.
+- An MPI implementation, such as OpenMPI.
+- The Python libraries `mpi4py` and `numpy`.
+
+🔗 3. Install the dependency:
+On macOS, install OpenMPI with:
+
+```bash
+brew install open-mpi
+```
+
+On Ubuntu/Debian systems:
+
+```bash
+sudo apt-get install openmpi-bin openmpi-common openmpi-doc libopenmpi-dev
+```
+
+Then, install the Python dependencies:
+
+```bash
 pip install mpi4py numpy
 ```
 
----
+▶️ 4. Run the program
 
-## ▶️ Execução
-
-Execute o programa com **dois processos**, simulando o envio e retorno da mensagem (ping-pong):
+Run the program with exactly two processes:
 
 ```bash
 mpirun -np 2 python3 mpi.py
 ```
 
-📌 O parâmetro `-np 2` é **obrigatório**, pois o código foi desenvolvido para dois processos (um envia e o outro responde).
+The `-np 2` parameter is required because the implementation was designed for one sending process and one responding process.
 
----
+At the end of the run, the program generates the `Resultados.csv` file with the collected measurements.
 
-## 📊 Funcionamento
+## 🏗️ Implementation Strategy
 
-1. Para cada iteração, o programa gera um array de tamanho `n = 2^exp` (de 1 até 2¹⁹ doubles).
-2. **Processo 0** envia o array para o **Processo 1** (`Send()`).
-3. **Processo 1** recebe o array (`Recv()`) e devolve-o (`Send()`).
-4. **Processo 0** mede o tempo total (ida + volta) com `MPI.Wtime()`.
-5. O código calcula:
+For each message size, the program generates an array of `n = 2^exp` `double` values, with `exp` ranging from 0 to 19. Rank 0 sends the array to process 1; process 1 then receives it and sends it back.
 
-   * ⏱️ **Tempo total (s)**
-   * 📦 **Volume transferido (n * 8 bytes * 2)**
-   * ⚡ **Taxa de transferência (MB/s)**
-6. Todos os resultados são salvos em **Resultados.csv**.
+Process 0 measures the total interval between sending the message and receiving the response. With this value, the program calculates the volume transferred on the round trip (`n × 8 bytes × 2`) and obtains the transfer rate in MB/s. Only process 0 consolidates and saves the results to the CSV file.
 
----
+## 🛠️ Technologies
 
-## 📁 Estrutura do Projeto
+| Technology | Use in the project |
+| --- | --- |
+| Python 3.x | Main language |
+| MPI | Communication between processes |
+| mpi4py | Python interface for MPI |
+| NumPy | Generation of `double` value arrays |
+| CSV | Export of measurements |
 
-```
-📂 Projeto-MPI-PingPong
-│
-├── mpi.py             # Código principal do experimento
-├── Resultados.csv     # Saída gerada automaticamente após execução
-└── README.md          # Este arquivo de documentação
-```
+## 📁 Project Structure
 
----
-
-## 🧾 Exemplo de Saída no Terminal
-
-```
-Processo 0 enviou os dados!
-Processo 1 recebeu os dados
-Processo 1 devolveu os dados!
-Processo 0 recebeu os dados!
-1 doubles | tempo: 1.030000e-04s | taxa 0.15 MB/s
-...
-Resultados salvos em 'Resultados.csv'!
+```text
+Projeto-MPI-PingPong/
+├── mpi.py             # Main experiment code
+├── Resultados.csv     # File generated with the measurements
+└── README.md          # Project documentation
 ```
 
----
+## 📝 Final Notes
 
-## 📑 Exemplo de Saída no Arquivo CSV
+- The order of messages shown in the terminal may vary, since the processes run concurrently.
+- The program does not use artificial synchronization with `comm.Barrier()`, avoiding interference with the measurements.
+- Latency corresponds to the round-trip communication time; the transfer rate represents the volume communicated per unit of time.
+- The project was developed for didactic purposes in the Distributed Systems course.
 
-| operação  | n (doubles) | tempo (s)    | taxa (MB/s) |
-| --------- | ----------- | ------------ | ----------- |
-| Send/Recv | 1           | 1.030000e-04 | 0.15        |
-| Send/Recv | 2           | 2.900000e-05 | 1.05        |
-| Send/Recv | 4           | 1.700000e-05 | 3.59        |
-| ...       | ...         | ...          | ...         |
+## 📄 License
 
----
+Academic project developed to study point-to-point communication in distributed systems.
 
-## 🧠 Conceito Envolvido
-
-O experimento implementa o padrão **Ping-Pong**, uma técnica clássica de **benchmark** em sistemas distribuídos.
-
-Mede o desempenho da comunicação entre dois processos em termos de:
-
-* 🕓 **Latência:** tempo gasto para enviar e receber uma mensagem.
-* 🚀 **Largura de banda:** taxa de transferência de dados (MB/s).
-
-Essas métricas são fundamentais para avaliar o desempenho de **clusters**, **redes interconectadas** e **aplicações paralelas**.
+The code may be consulted, studied, and adapted for educational purposes. To formally define the reuse terms, include a `LICENSE` file with the chosen license.
 
 ---
 
-## 💬 Observações
-
-* O programa **não sincroniza** a ordem das mensagens no terminal, pois o MPI executa processos concorrentemente.
-* Evita qualquer sincronização artificial (`comm.Barrier()`), que alteraria as medições.
-* Apenas o **Processo 0** grava os resultados no CSV.
-* Desenvolvido com fins **didáticos** para estudo de comunicação ponto a ponto em MPI.
-
----
-
-## 👨‍💻 Autor
-
-**Leonardo Farias**
-📚 *Disciplina:* Sistemas Distribuídos
-🏛️ *Projeto:* Comunicação Ponto a Ponto com MPI (Ping-Pong)
-
----
-
-Quer que eu formate a versão final como `README.md` (com Markdown real e emojis prontos pra copiar/colar no GitHub)?
+Developed by **Leonardo Farias** for the Distributed Systems course.
