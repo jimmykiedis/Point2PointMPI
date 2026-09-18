@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "point2point-mpi"
+version = "0.1.0"
+description = "Benchmark de comunicação ponto a ponto com MPI usando mpi4py e NumPy."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24.0",
+    "mpi4py>=3.1.0",
+]
+
+[tool.setuptools]
+py-modules = ["mpi"]

@@ -32,51 +32,50 @@ Demonstrate, through a practical and didactic example, how parallel processes co
 
 ## 🛠 How to Use the Repository
 
-📥 1. Clone the repository with Git:
+📥 1. Clone the repository:
 
 ```bash
 git clone https://github.com/jimmykiedis/Point2PointMPI.git
-cd Projeto-MPI-PingPong
+cd Point2PointMPI
 ```
 
-You can also download the project as a ZIP file from the repository page and extract it into a local folder.
+You can also download the project as a ZIP file and extract it locally.
 
 📋 2. Prerequisites
 
-- Python 3.x.
-- An MPI implementation, such as OpenMPI.
-- The Python libraries `mpi4py` and `numpy`.
+- Python 3.9 or newer
+- An MPI implementation such as OpenMPI
 
-🔗 3. Install the dependency:
-On macOS, install OpenMPI with:
+🔗 3. Install MPI and project dependencies
+
+On macOS:
 
 ```bash
 brew install open-mpi
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
-On Ubuntu/Debian systems:
+On Ubuntu/Debian:
 
 ```bash
-sudo apt-get install openmpi-bin openmpi-common openmpi-doc libopenmpi-dev
-```
-
-Then, install the Python dependencies:
-
-```bash
-pip install mpi4py numpy
+sudo apt-get update
+sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
 ▶️ 4. Run the program
 
-Run the program with exactly two processes:
+Execute the benchmark with exactly two MPI processes:
 
 ```bash
-mpirun -np 2 python3 mpi.py
+mpirun -np 2 python mpi.py
 ```
 
-The `-np 2` parameter is required because the implementation was designed for one sending process and one responding process.
+The `-np 2` option is required because the program is designed for one sender process and one responder process.
 
-At the end of the run, the program generates the `Resultados.csv` file with the collected measurements.
+At the end of the run, the program writes the collected measurements to `Resultados.csv`.
 
 ## 🏗️ Implementation Strategy
 
